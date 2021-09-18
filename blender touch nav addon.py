@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Touch Navigation for 2D animation and tablets (tabbed)",
     "author": "Rekliner (github.com/rekliner)",
-    "version": (1, 4, 4),
+    "version": (1, 4, 5),
     "blender": (2, 93, 0),
     "location": "View3D > Sidebar > Touch Tab",
     "description": "So you'll need the keyboard less for quick 2d animation",
@@ -143,10 +143,22 @@ class TouchNav(View3DPanel, bpy.types.Panel):
         if settings.palette:
             layout.template_palette(settings, "palette", color=True)
 
-        #gpd = context.object.gpencil
+
+        row = layout.row()
+        col = row.column()
+        col.prop(brush.gpencil_settings, "use_settings_stabilizer", text="Stabilize Stroke")
+        row = layout.row()
+        col = row.column()
+        col.active = brush.gpencil_settings.use_settings_stabilizer
+        col.prop(brush, "smooth_stroke_radius", text="Radius", slider=True)
+        col.prop(brush, "smooth_stroke_factor", text="Factor", slider=True)
+
+
         row = layout.row()
         col = row.column()
         col.prop(gpd, "onion_factor", text="Onion Skin", slider=True)
+
+
 
 
 
