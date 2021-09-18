@@ -6,6 +6,7 @@ This should make blender start in the most user-friendly view for drawing simila
   
 My teenage kids like drawing in Krita but want to animate.  They found the default 2d animation setup of Blender to be difficult and intimidating.  Mainly they like to use old surface tablets to draw without needing a keyboard...which is a challenge in Blender.  Finding certain crucial settings can be a lot to remember, for example the data properties tab to change layers in Grease Pencil. This is an attempt to give the most convenient startup and workflow possible to get drawing immediately without getting bogged down in the depths of Blender's endless options.  
   
+![Screenshot](Screenshot.png)
 
 # Installation:
 *  Download the files
@@ -28,11 +29,12 @@ It differs from the 2.93 blank 2D animation in the following ways:
 *  Brush radius set to 25px Pencil with strength set to full
 *  Same settings for 2D Animation layout
 *  Object Data Properties tab is selected in the 2D animation Properties window to show layer options
-*  Onion skin set to show 2 keyframes with a lower opacity and more discernable green and red colors
+*  Onion skin set to show 2 keyframes with a lower opacity (.15) and more discernable green and red colors
 *  Brush Pack v2 by Daniel Martinez Lara is appended (watch out for the automatic material change, you may need to set it back to Solid Stroke after using a custom brush) 
 *  A second pallette is started with primary colors
 *  Output properties set to 24fps FFmpeg Video at 960x480 with MPEG-4 container and H.264 codec for 10 seconds
 *  Rendered video goes to the same path as the blend file
+*  Stabilize Stroke set to 20px with .755 weight
 
 
-Let me know if you have any suggestions on how to make this the perfect blender startup file to keep kids engaged.
+Let me know if you have any suggestions on how to make this the perfect blender startup file to keep kids & 2D animators engaged.
