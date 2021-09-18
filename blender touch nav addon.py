@@ -1,9 +1,9 @@
 bl_info = {
-    "name": "Touch Navigation for 2D animation and tablets",
+    "name": "Touch Navigation for 2D animation and tablets (tabbed)",
     "author": "Rekliner (github.com/rekliner)",
-    "version": (1, 3, 0),
+    "version": (1, 4, 4),
     "blender": (2, 93, 0),
-    "location": "View3D > Sidebar > Tool Tab",
+    "location": "View3D > Sidebar > Touch Tab",
     "description": "So you'll need the keyboard less for quick 2d animation",
     "warning": "",
     "wiki_url": "https://github.com/rekliner/blenderTouchNav",
@@ -15,7 +15,7 @@ import bpy
 class View3DPanel:
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = "Tool"
+    bl_category = "TouchNav"
 
     @classmethod
     def poll(cls, context):
@@ -65,6 +65,90 @@ class TouchNav(View3DPanel, bpy.types.Panel):
         row = layout.row()
         row.operator("opr.roll_left_view1", text="Left", icon="LOOP_BACK")
         row.operator("opr.roll_right_view1", text="Right", icon="LOOP_FORWARDS")
+                
+                
+        ob = context.object
+        gpd = ob.data
+        gpl = gpd.layers.active
+
+        row = layout.row()
+        layer_rows = 7
+
+        col = row.column()
+        col.template_list("GPENCIL_UL_layer", "", gpd, "layers", gpd.layers, "active_index",
+                          rows=layer_rows, sort_reverse=True, sort_lock=True)
+
+        col = row.column()
+        sub = col.column(align=True)
+        sub.operator("gpencil.layer_add", icon='ADD', text="")
+        sub.operator("gpencil.layer_remove", icon='REMOVE', text="")
+
+        sub.separator()
+
+        if gpl:
+            sub.menu("GPENCIL_MT_layer_context_menu", icon='DOWNARROW_HLT', text="")
+
+            if len(gpd.layers) > 1:
+                col.separator()
+
+                sub = col.column(align=True)
+                sub.operator("gpencil.layer_move", icon='TRIA_UP', text="").type = 'UP'
+                sub.operator("gpencil.layer_move", icon='TRIA_DOWN', text="").type = 'DOWN'
+
+                col.separator()
+
+                sub = col.column(align=True)
+                sub.operator("gpencil.layer_isolate", icon='RESTRICT_VIEW_ON', text="").affect_visibility = True
+                sub.operator("gpencil.layer_isolate", icon='LOCKED', text="").affect_visibility = False
+
+        # Layer main properties
+        row = layout.row()
+        col = layout.column(align=True)
+
+        if gpl:
+            layout = self.layout
+            layout.use_property_split = True
+            layout.use_property_decorate = True
+            col = layout.column(align=True)
+
+            col = layout.row(align=True)
+            col.prop(gpl, "blend_mode", text="Blend")
+
+            col = layout.row(align=True)
+            col.prop(gpl, "opacity", text="Opacity", slider=True)
+
+            col = layout.row(align=True)
+            col.prop(gpl, "use_lights")
+
+        settings = context.tool_settings.gpencil_paint
+        brush = settings.brush
+
+        row = layout.row()
+        large_preview = True
+        if large_preview:
+            row.column().template_ID_preview(settings, "brush", new="brush.add", rows=3, cols=8, hide_buttons=False)
+        else:
+            row.column().template_ID(settings, "brush", new="brush.add")
+        col = row.column()
+        col.menu("VIEW3D_MT_brush_context_menu", icon='DOWNARROW_HLT', text="")
+
+        if brush is not None:
+            col.prop(brush, "use_custom_icon", toggle=True, icon='FILE_IMAGE', text="")
+
+            if brush.use_custom_icon:
+                layout.prop(brush, "icon_filepath", text="")
+
+
+        layout.template_ID(settings, "palette", new="palette.new")
+        if settings.palette:
+            layout.template_palette(settings, "palette", color=True)
+
+        #gpd = context.object.gpencil
+        row = layout.row()
+        col = row.column()
+        col.prop(gpd, "onion_factor", text="Onion Skin", slider=True)
+
+
 
 classes = (
     TouchNav,
