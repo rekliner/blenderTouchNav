@@ -1,9 +1,9 @@
 bl_info = {
-    "name": "Touch Navigation for 2D animation and tablets (tabbed)",
+    "name": "Touch Navigation for 2D animation and tablets",
     "author": "Rekliner (github.com/rekliner)",
     "version": (1, 4, 5),
     "blender": (2, 93, 0),
-    "location": "View3D > Sidebar > Touch Tab",
+    "location": "View3D > Sidebar > TouchNav",
     "description": "So you'll need the keyboard less for quick 2d animation",
     "warning": "",
     "wiki_url": "https://github.com/rekliner/blenderTouchNav",
@@ -24,7 +24,7 @@ class View3DPanel:
 
 # Roll Operators
 class VIEW3D_OT_RollLeftViewTn(bpy.types.Operator):
-    bl_idname = "opr.roll_left_view1"
+    bl_idname = "opr.roll_left_view_tn"
     bl_label = "Roll Left View"
     bl_description = "Roll the view Left"
 
@@ -38,7 +38,7 @@ class VIEW3D_OT_RollLeftViewTn(bpy.types.Operator):
 
 
 class VIEW3D_OT_RollRightViewTn(bpy.types.Operator):
-    bl_idname = "opr.roll_right_view1"
+    bl_idname = "opr.roll_right_view_tn"
     bl_label = "Roll Right View"
     bl_description = "Roll the view Right"
 
@@ -63,29 +63,33 @@ class TouchNav(View3DPanel, bpy.types.Panel):
         row = layout.row()
         row.label(text="Rotate View")
         row = layout.row()
-        row.operator("opr.roll_left_view1", text="Left", icon="LOOP_BACK")
-        row.operator("opr.roll_right_view1", text="Right", icon="LOOP_FORWARDS")
+        row.operator("opr.roll_left_view_tn", text="Left", icon="LOOP_BACK")
+        row.operator("opr.roll_right_view_tn", text="Right", icon="LOOP_FORWARDS")
                 
                 
         ob = context.object
         gpd = ob.data
-        gpl = gpd.layers.active
+        gpl = False
+        try:
+            gpl = gpd.layers.active
+        except:
+            gpl = False
+        
 
         row = layout.row()
         layer_rows = 7
-
-        col = row.column()
-        col.template_list("GPENCIL_UL_layer", "", gpd, "layers", gpd.layers, "active_index",
-                          rows=layer_rows, sort_reverse=True, sort_lock=True)
-
-        col = row.column()
-        sub = col.column(align=True)
-        sub.operator("gpencil.layer_add", icon='ADD', text="")
-        sub.operator("gpencil.layer_remove", icon='REMOVE', text="")
-
-        sub.separator()
-
         if gpl:
+            col = row.column()
+            col.template_list("GPENCIL_UL_layer", "", gpd, "layers", gpd.layers, "active_index",
+                            rows=layer_rows, sort_reverse=True, sort_lock=True)
+
+            col = row.column()
+            sub = col.column(align=True)
+            sub.operator("gpencil.layer_add", icon='ADD', text="")
+            sub.operator("gpencil.layer_remove", icon='REMOVE', text="")
+
+            sub.separator()
+
             sub.menu("GPENCIL_MT_layer_context_menu", icon='DOWNARROW_HLT', text="")
 
             if len(gpd.layers) > 1:
@@ -153,10 +157,10 @@ class TouchNav(View3DPanel, bpy.types.Panel):
         col.prop(brush, "smooth_stroke_radius", text="Radius", slider=True)
         col.prop(brush, "smooth_stroke_factor", text="Factor", slider=True)
 
-
-        row = layout.row()
-        col = row.column()
-        col.prop(gpd, "onion_factor", text="Onion Skin", slider=True)
+        if hasattr('gpd', 'onion_factor'):
+            row = layout.row()
+            col = row.column()
+            col.prop(gpd, "onion_factor", text="Onion Skin", slider=True)
 
 
 
