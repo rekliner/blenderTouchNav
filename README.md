@@ -1,5 +1,5 @@
 # blenderTouchNav
-A blender addon to show touchscreen-friendly buttons for undo, rotate canvas, brushes plus some simplified defaults for 2D Animation.
+A set of blender addons to show touchscreen-friendly buttons for undo, rotate canvas, brushes plus some simplified defaults for 2D Animation.
 
 # Concept:
 This should make blender start in the most user-friendly view for drawing similar to a Krita/Photoshop interface.  
@@ -16,7 +16,12 @@ My teenage kids like drawing in Krita but want to animate.  They found the defau
 
 The "TouchNav" tab should now be visible in the 3D view sidebar.  
 
-# Blender default file (optional):  
+# Touch filter (experimental):
+This is a hacky method of blocking out the touchscreen input in the 3d view so only pen strokes are registered.  The idea is to prevent your wrist from making accidental strokes while using the pen (Krita has the option to disable touch input).  It seems to use a lot of overhead to monitor all mouse/pen events even if they are immediately bypassed, so it may not work with slower tablets.  It may not work in general, its an experiment until Blender can distiguish touch from mouse (I've submitted a request).
+*  Hit the `Install...` button and choose the `touch input filter addon.py` file
+*  Check the box next to the addon name to activate (3D View: Only allow pen input)
+
+# Blender default file:  
 The other half of this setup is a blender default file to make a new 2D Animation start with the most convenient view available.  
 All you need to do is open default.blend then choose `File->Defaults->Save Startup File`.  
   
